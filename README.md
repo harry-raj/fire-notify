@@ -95,7 +95,7 @@ This is a simple Single Page Application built with React, TypeScript, and Vite.
 ├── firebase.json
 ├── package.json
 ├── postcss.config.js
-├── tailwind.config.js
+├── tailwind.config.ts
 ├── tsconfig.json
 └── vite.config.ts
 ```
@@ -128,4 +128,4 @@ This component is the main application component that includes the notification 
 
 ## Styling
 
-Tailwind CSS is used for styling the components. You can customize the styles by editing the `src/index.css` file and the `tailwind.config.js` file.
+Tailwind CSS is used for styling the components. You can customize the styles by editing the `src/index.css` file and the `tailwind.config.ts` file.
