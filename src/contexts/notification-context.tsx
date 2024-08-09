@@ -28,16 +28,8 @@ const NotificationContext = createContext<INotificationContextType | undefined>(
   undefined
 );
 
-// Collection reference for the notifications collection.
 const notificationsCollection = collection(db, "notifications");
 
-/**
- * A React context provider for managing notifications.
- *
- * @param {Object} props - The component props.
- * @param {ReactNode} props.children - The child components.
- * @return {JSX.Element} The NotificationProvider component.
- */
 export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
@@ -56,12 +48,17 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  /**
-   * Add a new notification.
-   * @param {INotification} notification - The notification to add.
-   */
   const addNotification = async (notification: INotification) => {
     try {
+      const token = localStorage.getItem("fcmToken");
+
+      // Send a notification to the device using browser's notification API.
+      if (token) {
+        new Notification(notification.title, {
+          body: notification.body,
+        });
+      }
+      
       await addDoc(notificationsCollection, notification);
       await fetchNotifications();
     } catch (error) {
@@ -69,10 +66,6 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  /**
-   * Mark a notification as read.
-   * @param {string} id - The ID of the notification to mark as read.
-   */
   const markAsRead = async (id: string) => {
     try {
       const notificationDoc = doc(db, "notifications", id);
@@ -84,7 +77,6 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   useEffect(() => {
-    // Fetch notifications when the component mounts.
     fetchNotifications();
   }, []);
 
@@ -97,7 +89,6 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
-// Custom hook for accessing the notification context.
 export const useNotifications = (): INotificationContextType => {
   const context = useContext(NotificationContext);
   if (!context) {
