@@ -50,16 +50,14 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({
 
   const addNotification = async (notification: INotification) => {
     try {
-      const token = localStorage.getItem("fcmToken");
+      const res = await addDoc(notificationsCollection, notification);
 
       // Send a notification to the device using browser's notification API.
-      if (token) {
+      if (res?.id) {
         new Notification(notification.title, {
           body: notification.body,
         });
       }
-      
-      await addDoc(notificationsCollection, notification);
       await fetchNotifications();
     } catch (error) {
       console.error("Error adding notification: ", error);
